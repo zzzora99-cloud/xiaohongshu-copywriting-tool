@@ -439,7 +439,15 @@ async function requestBackendGeneration() {
   });
 
   if (!response.ok) {
-    const message = response.status === 404 ? "当前部署环境没有后端接口，已切换本地兜底分析。" : "后端接口暂不可用，已切换本地兜底分析。";
+    let backendMessage = "";
+    try {
+      const payload = await response.json();
+      backendMessage = payload.error ? `（${payload.error}）` : "";
+    } catch {
+      backendMessage = "";
+    }
+
+    const message = response.status === 404 ? "当前部署环境没有后端接口，已切换本地兜底分析。" : `后端接口暂不可用，已切换本地兜底分析。${backendMessage}`;
     throw new Error(message);
   }
 

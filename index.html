@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>全屋定制小红书文案生成器</title>
+    <meta
+      name="description"
+      content="面向全屋定制行业的图片识别小红书文案生成网站，自动生成标题、正文、标签和封面文案。"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__content">
+          <p class="eyebrow">Whole House Custom Copy Studio</p>
+          <h1 id="page-title">全屋定制小红书文案生成器</h1>
+          <p class="hero__lead">
+            上传空间实拍图，系统会识别空间亮点、材质氛围、风格倾向、收纳设计与小红书爆点，一键生成可直接发布的标题、正文、标签和封面文案。
+          </p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#generator">开始生成</a>
+            <a class="button button--ghost" href="#workflow">查看流程</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="文案示例">
+          <span class="hero-card__tag">今日爆款结构</span>
+          <h2>标题 / 正文 / 标签 / 封面文案</h2>
+          <p>高级感空间词 + 真实居住痛点 + 收纳细节 + 预算友好表达，适合设计师、门店顾问和品牌运营快速出稿。</p>
+        </aside>
+      </section>
+
+      <section id="generator" class="workspace" aria-label="文案生成工作台">
+        <div class="panel upload-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Step 01 · Upload</p>
+            <h2>上传全屋定制空间图片</h2>
+            <p>支持客厅、厨房、衣帽间、卧室、玄关、儿童房等图片。图片仅在浏览器本地分析，不会上传到服务器。</p>
+          </div>
+
+          <label class="drop-zone" id="dropZone" for="imageInput">
+            <input id="imageInput" type="file" accept="image/*" />
+            <span class="drop-zone__icon">＋</span>
+            <strong>点击或拖拽图片到此处</strong>
+            <small>建议上传清晰横图或竖图，系统会读取色彩、亮度与画面比例辅助判断。</small>
+          </label>
+
+          <div class="preview-card" id="previewCard" hidden>
+            <img id="previewImage" alt="已上传的全屋定制空间预览" />
+            <button class="button button--ghost" id="resetButton" type="button">重新上传</button>
+          </div>
+
+          <form class="input-grid" id="preferenceForm">
+            <label>
+              空间类型
+              <select id="roomType">
+                <option value="auto">系统自动判断</option>
+                <option value="客厅">客厅 / 电视柜</option>
+                <option value="厨房">厨房 / 餐边柜</option>
+                <option value="卧室">卧室 / 衣柜</option>
+                <option value="衣帽间">衣帽间</option>
+                <option value="玄关">玄关 / 鞋柜</option>
+                <option value="儿童房">儿童房</option>
+              </select>
+            </label>
+            <label>
+              品牌语气
+              <select id="tone">
+                <option value="高级克制">高级克制</option>
+                <option value="真实种草">真实种草</option>
+                <option value="设计师专业">设计师专业</option>
+              </select>
+            </label>
+            <label>
+              客单价定位
+              <select id="positioning">
+                <option value="中高端定制">中高端定制</option>
+                <option value="轻奢预算友好">轻奢预算友好</option>
+                <option value="高定品质">高定品质</option>
+              </select>
+            </label>
+          </form>
+
+          <button class="button button--primary button--wide" id="generateButton" type="button" disabled>
+            生成小红书文案
+          </button>
+        </div>
+
+        <div class="panel result-panel" aria-live="polite">
+          <div class="section-heading">
+            <p class="eyebrow">Step 02 · Insight</p>
+            <h2>图片识别与文案结果</h2>
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <p>上传图片后，这里会展示空间识别结果与完整小红书文案。</p>
+          </div>
+
+          <div class="results" id="results" hidden>
+            <div class="insight-grid" id="insightGrid"></div>
+
+            <article class="copy-card">
+              <div class="copy-card__header">
+                <span>标题</span>
+                <button data-copy-target="titleOutput" type="button">复制</button>
+              </div>
+              <h3 id="titleOutput"></h3>
+            </article>
+
+            <article class="copy-card">
+              <div class="copy-card__header">
+                <span>正文</span>
+                <button data-copy-target="bodyOutput" type="button">复制</button>
+              </div>
+              <p id="bodyOutput"></p>
+            </article>
+
+            <article class="copy-card copy-card--accent">
+              <div class="copy-card__header">
+                <span>封面文案</span>
+                <button data-copy-target="coverOutput" type="button">复制</button>
+              </div>
+              <h3 id="coverOutput"></h3>
+            </article>
+
+            <article class="copy-card">
+              <div class="copy-card__header">
+                <span>标签</span>
+                <button data-copy-target="tagsOutput" type="button">复制</button>
+              </div>
+              <p class="tags" id="tagsOutput"></p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow" aria-labelledby="workflow-title">
+        <div class="section-heading section-heading--center">
+          <p class="eyebrow">Designed for Custom Cabinetry Brands</p>
+          <h2 id="workflow-title">从图片到爆款笔记，只需三步</h2>
+        </div>
+        <div class="workflow__grid">
+          <article>
+            <span>01</span>
+            <h3>识别空间氛围</h3>
+            <p>读取图片主色、明暗、比例和视觉重心，判断材质关键词、风格倾向与空间卖点。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>提炼定制亮点</h3>
+            <p>围绕一门到顶、无拉手、嵌入式电器、开放格、转角收纳等行业高频卖点生成表达。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>匹配小红书语感</h3>
+            <p>自动组合痛点、情绪价值、可复制方案和标签，输出更适合获赞收藏的内容结构。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

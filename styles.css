@@ -353,6 +353,18 @@ h1 {
 
 .insight-item {
   padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.insight-item::after {
+  content: "";
+  position: absolute;
+  inset: auto 14px 12px auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(169, 120, 66, 0.1);
 }
 
 .insight-item span {
@@ -364,11 +376,15 @@ h1 {
 }
 
 .insight-item strong {
-  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+  display: block;
+  line-height: 1.55;
 }
 
 .copy-card {
   padding: 20px;
+  overflow-wrap: anywhere;
 }
 
 .copy-card--accent {

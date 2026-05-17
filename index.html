@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>全屋定制小红书文案生成器</title>
+    <meta
+      name="description"
+      content="面向全屋定制、高定木作、别墅大宅客户的图片分析与小红书文案生成网站。"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__content">
+          <p class="eyebrow">Whole House Custom Copy Studio</p>
+          <h1 id="page-title">全屋定制小红书文案生成器</h1>
+          <p class="hero__lead">
+            上传室内实景图，后端视觉模型会分析空间类型、柜体做法、材质颜色、灯光、收纳和落地亮点，再生成更像小红书真实分享的标题、正文、封面短句和标签。
+          </p>
+          <div class="hero__actions">
+            <a class="button button--primary" href="#generator">开始生成</a>
+            <a class="button button--ghost" href="#workflow">查看流程</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="文案示例">
+          <span class="hero-card__tag">升级版爆款逻辑</span>
+          <h2>先看图，再写真实种草笔记</h2>
+          <p>少写空泛形容词，多讲比例、留白、灯光、材质和普通人容易忽略的柜体细节。</p>
+        </aside>
+      </section>
+
+      <section id="generator" class="workspace" aria-label="文案生成工作台">
+        <div class="panel upload-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Step 01 · Upload</p>
+            <h2>上传全屋定制实景图</h2>
+            <p>推荐上传客厅、餐厅、厨房、卧室、衣帽间、玄关、书房、展厅等清晰图片。API Key 只在后端环境变量中读取，不会写入前端。</p>
+          </div>
+
+          <label class="drop-zone" id="dropZone" for="imageInput">
+            <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+            <span class="drop-zone__icon">＋</span>
+            <strong>点击或拖拽图片到此处</strong>
+            <small>后端可接入视觉模型做精准分析；GitHub Pages 静态环境会自动使用本地兜底分析。</small>
+          </label>
+
+          <div class="preview-card" id="previewCard" hidden>
+            <img id="previewImage" alt="已上传的全屋定制空间预览" />
+            <button class="button button--ghost" id="resetButton" type="button">重新上传</button>
+          </div>
+
+          <form class="input-grid" id="preferenceForm">
+            <label>
+              空间提示
+              <select id="roomType">
+                <option value="auto">交给视觉模型判断</option>
+                <option value="客厅">客厅</option>
+                <option value="餐厅">餐厅</option>
+                <option value="厨房">厨房</option>
+                <option value="卧室">卧室</option>
+                <option value="衣帽间">衣帽间</option>
+                <option value="玄关">玄关</option>
+                <option value="儿童房">儿童房</option>
+                <option value="书房">书房</option>
+                <option value="展厅">展厅</option>
+                <option value="其他">其他</option>
+              </select>
+            </label>
+            <label>
+              发布口吻
+              <select id="tone">
+                <option value="真实装修分享">真实装修分享</option>
+                <option value="设计师拆解">设计师拆解</option>
+                <option value="高定木作种草">高定木作种草</option>
+              </select>
+            </label>
+            <label>
+              目标客群
+              <select id="positioning">
+                <option value="高审美装修人群">高审美装修人群</option>
+                <option value="新房装修用户">新房装修用户</option>
+                <option value="改善型住宅用户">改善型住宅用户</option>
+                <option value="大宅业主">大宅业主</option>
+                <option value="别墅业主">别墅业主</option>
+              </select>
+            </label>
+          </form>
+
+          <button class="button button--primary button--wide" id="generateButton" type="button" disabled>
+            分析图片并生成小红书文案
+          </button>
+          <p class="status-text" id="statusText" role="status"></p>
+        </div>
+
+        <div class="panel result-panel" aria-live="polite">
+          <div class="section-heading">
+            <p class="eyebrow">Step 02 · Analyze & Write</p>
+            <h2>图片分析与小红书结果</h2>
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <p>上传图片后，这里会分模块展示图片分析结果、种草点、标题、正文、封面短句和标签。</p>
+          </div>
+
+          <div class="results" id="results" hidden>
+            <article class="result-section">
+              <div class="copy-card__header">
+                <span>图片分析结果</span>
+                <button data-copy-target="analysisOutput" type="button">复制</button>
+              </div>
+              <div class="analysis-grid" id="analysisGrid"></div>
+              <p id="analysisOutput" class="visually-hidden"></p>
+            </article>
+
+            <article class="result-section result-section--accent">
+              <div class="copy-card__header">
+                <span>种草点提炼</span>
+                <button data-copy-target="hooksOutput" type="button">复制</button>
+              </div>
+              <ul class="hook-list" id="hooksList"></ul>
+              <p id="hooksOutput" class="visually-hidden"></p>
+            </article>
+
+            <article class="result-section">
+              <div class="copy-card__header">
+                <span>小红书标题（5个）</span>
+                <button data-copy-target="titlesOutput" type="button">复制</button>
+              </div>
+              <ol class="title-list" id="titleList"></ol>
+              <p id="titlesOutput" class="visually-hidden"></p>
+            </article>
+
+            <article class="result-section">
+              <div class="copy-card__header">
+                <span>小红书正文</span>
+                <button data-copy-target="bodyOutput" type="button">复制</button>
+              </div>
+              <p class="long-copy" id="bodyOutput"></p>
+            </article>
+
+            <article class="result-section result-section--cover">
+              <div class="copy-card__header">
+                <span>封面短句</span>
+                <button data-copy-target="coverOutput" type="button">复制</button>
+              </div>
+              <div class="cover-lines" id="coverList"></div>
+              <p id="coverOutput" class="visually-hidden"></p>
+            </article>
+
+            <article class="result-section">
+              <div class="copy-card__header">
+                <span>标签</span>
+                <button data-copy-target="tagsOutput" type="button">复制</button>
+              </div>
+              <p class="tags" id="tagsOutput"></p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow" aria-labelledby="workflow-title">
+        <div class="section-heading section-heading--center">
+          <p class="eyebrow">Frontend + Backend API Ready</p>
+          <h2 id="workflow-title">从图片到爆款笔记，按真实项目逻辑拆解</h2>
+        </div>
+        <div class="workflow__grid">
+          <article>
+            <span>01</span>
+            <h3>后端接收图片</h3>
+            <p>前端只负责上传和展示，图片分析请求发送到后端接口，OpenAI API Key 仅从后端环境变量读取。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>视觉模型结构化分析</h3>
+            <p>识别空间、风格、主色调、柜体、材质、灯光、收纳和适合人群，输出可复用的结构化信息。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>生成小红书笔记</h3>
+            <p>围绕“为什么值得参考”和“普通人容易忽略的细节”生成标题、正文、封面短句和标签。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
